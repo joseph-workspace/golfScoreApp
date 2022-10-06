@@ -1,3 +1,9 @@
 $color: green;
 $full-width: 100%;
 $full-height: 100vh;
+
+
+body, .container {
+    width: $full-width;
+    height: $full-height;
+}
