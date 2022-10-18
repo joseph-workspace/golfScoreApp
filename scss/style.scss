@@ -3,7 +3,11 @@ $full-width: 100%;
 $full-height: 100vh;
 
 
-body, .container {
+body, .outerFlex, navbar {
     width: $full-width;
     height: $full-height;
+}
+
+.navbar {
+    height: 50px;
 }

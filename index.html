@@ -6,21 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link href="./css/style.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script defer src="https://kit.fontawesome.com/8b9253969f.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script defer src="./js/score.js"></script>
     <title>Golf-Score</title>
   </head>
   
   <body>
-    <h1>Golf Scoring App</h1>
-    <div class="container">
+
+    <div class="container-fluid d-flex flex-column m-0 p-0 outerFlex">
+      <div class="row w-100 m-0">
+        <nav class="navbar w-100 bg-info ps-3">
+          <i class="col-10 fa-regular fa-calendar-days p"></i>
+          <i class="col-2 fa-solid fa-bars"></i>
+        </nav>
+      </div>
+
+
       <div class="row">
+        <h1>Golf Scoring App</h1>
         <div class="col-lg-12" id="header"></div>
       </div>
+
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-4">
           <div id="options-container"></div>
+          <!-- dynamic option tags will be added after api request is returned -->
+          <div class="form-group">
+          <label for="course-select">Select Course</label>
+          <select class="form-control" id="course-select"></select>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="tee-box-select">Select Tee Box</label>
+            <select class="form-control" id="tee-box-select"></select>
+          </div>
+        </div>
         </div>
       </div>
+      
 
       <div class="row" id="scorecard-container">
         <div class=".col-lg-12" id="scorecard">
