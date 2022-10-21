@@ -7,4 +7,16 @@ body, .outerFlex, navbar {
   height: 50px;
 }
 
+#scorecard-container, .score-card-back9 {
+  visibility: hidden;
+}
+
+.holes {
+  text-align: center;
+}
+
+.form-group-1, .form-group-2 {
+  visibility: visible;
+}
+
 /*# sourceMappingURL=style.css.map */
