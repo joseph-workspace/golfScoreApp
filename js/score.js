@@ -1,9 +1,15 @@
+import {getPlayer} from './players.js'
 //globals
 var courses = [];
 var teeBoxes = {};
+var players = [];
 var courseId;
+var playerIdentifier = 1;
 const selectElement = document.getElementById('course-select');
 const teeBoxElement = document.getElementById('tee-box-select');
+const addPlayerBtn = document.querySelector('.addBtn');
+const tableCourseHeading = document.getElementById('');
+const tableTeeBox = document.getElementById('');
 
 window.onload = getAvailableCourses();
 
@@ -37,7 +43,7 @@ teeBoxElement.addEventListener('change', function(event) {
     const yardageRow = document.querySelector('#Yardage');
     const parRow = document.querySelector('#Par');
     const handicapRow = document.querySelector('#Handicap');
-    const golfCourseAttributes = ['yards', 'par', 'hcp'];
+    //const golfCourseAttributes = ['yards', 'par', 'hcp'];
     
     displayOrHide(table1Element);
     displayOrHide(courseSelect);
@@ -45,9 +51,28 @@ teeBoxElement.addEventListener('change', function(event) {
     renderYardage(courseId, yardageRow, event.target.value, 'Yardage');
     renderPar(courseId, parRow, event.target.value, 'Par');
     renderHandicap(courseId, handicapRow, event.target.value, 'Handicap');
-    // console.log(teeBoxes);
 }); 
 
+addPlayerBtn.addEventListener('click', () => {
+    //prompt user for player name
+    //create player object and store in players array
+    //print row with player name
+    const playerName = prompt('Please enter your player name:');
+    createPlayer(playerName);
+    console.log(players);
+    printPlayerRows(players.length - 1);
+});
+
+document.getElementById('player-' + playerIdentifier).addEventListener('input', (event) => {
+    if (event.target.tagName.toLowerCase() === 'td') {
+        //players[event.target.id - 1];
+        inputPlayerData(event.target, playerIdentifier);
+        console.log(players);
+        updatePlayerRow();
+    }
+});
+
+//functions
 async function getAvailableCourses() {
     return fetch('https://golf-courses-api.herokuapp.com/courses/')
     .then((response) => response.json())
@@ -82,7 +107,7 @@ function teeBoxSelect(currentCourseId) {
 function fillOutScorecard(rowId) {
     //define variables
     teeBoxes[courseId].forEach((hole) => {
-
+    
     });
 }
 function displayOrHide(element) {
@@ -107,8 +132,7 @@ function renderYardage(courseId, tableRowElement, teeBoxIndex, rowTitle) {
         total += hole.teeBoxes[teeBoxIndex].yards;
         tableRowHtml += `<td id="${index}">${hole.teeBoxes[teeBoxIndex].yards}</td>`;
         if (index === 8) {
-            tableRowHtml += `<td id="out">${total}</td>
-            \n<td></td>`;
+            tableRowHtml += `<td id="out">${total}</td>`;
             firstHalf = total;
             total = 0;
         }
@@ -132,8 +156,7 @@ function renderPar(courseId, tableRowElement, teeBoxIndex, rowTitle) {
         total += hole.teeBoxes[teeBoxIndex].par;
         tableRowHtml += `<td id="${index}">${hole.teeBoxes[teeBoxIndex].par}</td>`;
         if (index === 8) {
-            tableRowHtml += `<td id="out">${total}</td>
-            \n<td></td>`;
+            tableRowHtml += `<td id="out">${total}</td>`;
             firstHalf = total;
             total = 0;
         }
@@ -157,8 +180,7 @@ function renderHandicap(courseId, tableRowElement, teeBoxIndex, rowTitle) {
         total += hole.teeBoxes[teeBoxIndex].hcp;
         tableRowHtml += `<td id="${index}">${hole.teeBoxes[teeBoxIndex].hcp}</td>`;
         if (index === 8) {
-            tableRowHtml += `<td id="out">${total}</td>
-            \n<td></td>`;
+            tableRowHtml += `<td id="out">${total}</td>`;
             firstHalf = total;
             total = 0;
         }
@@ -168,4 +190,51 @@ function renderHandicap(courseId, tableRowElement, teeBoxIndex, rowTitle) {
         }
     });
     tableRowElement.innerHTML = tableRowHtml;
+}
+function printPlayerRows(playerId) {
+    //if empty add player name to first cell
+    //print empty/filled out holes
+    //total up 1-9 score when first 9 hole scores are entered
+    //total up 10-18 in the same way
+    //check for negative numbers or zeros
+    let tableRowHtml = '';
+    tableRowHtml += `<td id="${new Date().getTime()}">${players[playerId].name}</td>`;
+    for (let i = 1; i < 19; i++) {
+        if (i <= 8 | i > 9) {
+            tableRowHtml += `<td id="${i}" contenteditable="true"></td>`;
+        } else if (i === 9) {
+            tableRowHtml += `<td id="${i}" contenteditable="true"></td>
+            \n<td id="out-1"></td>`;
+        }
+    }
+    tableRowHtml += `<td id="in"></td>\n<td id="out-2"></td>
+    \n<td id="total"></td>`;
+    let idString = 'player-' + (playerId + 1);
+    document.getElementById(idString).innerHTML = tableRowHtml;
+}
+function createPlayer(playerName) {
+    players.push(getPlayer(playerName));
+    // console.log(players);
+}
+function updatePlayerRow() {
+    //total up 1-9 score when first 9 hole scores are entered
+    //total up 10-18 in the same way
+    let counter = 0;
+    let total = 0;
+    let playersPoints = players[playerIdentifier - 1];
+    for (let i = 0; i < 9; i++) {
+        if (playersPoints.scores[i] !== undefined || playersPoints !== NaN) {
+            total += playersPoints.scores[i];
+            counter++;
+        }
+    }
+    if (counter === 9) {
+        document.getElementById('out-1').innerHTML = total;
+    } else {
+        document.getElementById('out-1').innerHTML = '';
+    }
+}
+function inputPlayerData(targetBox, currentRowId) {
+    //push currentBox's value to player scores array
+    players[currentRowId - 1].scores[parseInt(targetBox.id) - 1] = parseInt(targetBox.textContent);
 }
