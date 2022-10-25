@@ -3,13 +3,14 @@ import {getPlayer} from './players.js'
 var courses = [];
 var teeBoxes = {};
 var players = [];
+var courseName;
 var courseId;
 var playerIdentifier = 1;
 const selectElement = document.getElementById('course-select');
 const teeBoxElement = document.getElementById('tee-box-select');
 const addPlayerBtn = document.querySelector('.addBtn');
-const tableCourseHeading = document.getElementById('');
-const tableTeeBox = document.getElementById('');
+const tableTeeBox = document.getElementById('tee-box-heading');
+const tableCourseHeading = document.getElementById('course-heading');
 
 window.onload = getAvailableCourses();
 
@@ -23,14 +24,22 @@ selectElement.addEventListener('change', function(event) {
         //this solves the problem of Tee box not updating if the user changes the course
         //after initially selecting one
         courses[0].forEach((course) => {
+            console.log('The current course is: ', course);
             if ((event.target.value == course.id) && !teeBoxes[course.id]) {
                 teeBoxes[course.id] = json.data.holes; 
             }
         });
         //call teeBoxSelect fcn. which passes the courseId to the function so that it knows
         //which teeBox to load up from the teeBox obj.
-        console.log(teeBoxes);
+        //console.log(teeBoxes);
+        console.log('here\'s the current course name?', event.target.value);
         teeBoxSelect(event.target.value);
+        courses[0].forEach((course) => {
+            if (course.id == event.target.value) {
+                courseName = course.name;
+                tableCourseHeading.textContent = `Your course: ${courseName}`;
+            }
+        });
 
     });
 }) 
@@ -43,11 +52,16 @@ teeBoxElement.addEventListener('change', function(event) {
     const yardageRow = document.querySelector('#Yardage');
     const parRow = document.querySelector('#Par');
     const handicapRow = document.querySelector('#Handicap');
-    //const golfCourseAttributes = ['yards', 'par', 'hcp'];
-    
+    console.log(teeBoxes);
+    console.log('This is where you want to print headers', event.target.value);
+    //get teeBox type here
+    let currentTeeBox = teeBoxes[courseId][0].teeBoxes[event.target.value].teeType.toUpperCase();
+    tableTeeBox.textContent = `Tee Box: ${currentTeeBox}`;
     displayOrHide(table1Element);
     displayOrHide(courseSelect);
     displayOrHide(teeSelect);
+    displayOrHide(tableCourseHeading);
+    displayOrHide(tableTeeBox);
     renderYardage(courseId, yardageRow, event.target.value, 'Yardage');
     renderPar(courseId, parRow, event.target.value, 'Par');
     renderHandicap(courseId, handicapRow, event.target.value, 'Handicap');
@@ -57,21 +71,48 @@ addPlayerBtn.addEventListener('click', () => {
     //prompt user for player name
     //create player object and store in players array
     //print row with player name
-    const playerName = prompt('Please enter your player name:');
-    createPlayer(playerName);
-    console.log(players);
-    printPlayerRows(players.length - 1);
+    if (players.length < 4) {
+        const playerName = prompt('Please enter your player name:');
+        createPlayer(playerName);
+        console.log(players);
+        printPlayerRows(players.length - 1);
+    } else {
+        toastr.warning('You can\'t add more than 4 players!', 'Error!');
+    }
 });
 
-document.getElementById('player-' + playerIdentifier).addEventListener('input', (event) => {
+document.getElementById('player-1').addEventListener('input', (event) => {
     if (event.target.tagName.toLowerCase() === 'td') {
-        //players[event.target.id - 1];
+        playerIdentifier = 1;
+        inputPlayerData(event.target, playerIdentifier);
+        //console.log(players);
+        updatePlayerRow();
+    }
+});
+document.getElementById('player-2').addEventListener('input', (event) => {
+    if (event.target.tagName.toLowerCase() === 'td') {
+        playerIdentifier = 2;
+        inputPlayerData(event.target, playerIdentifier);
+        //console.log(players);
+        updatePlayerRow();
+    }
+});
+document.getElementById('player-3').addEventListener('input', (event) => {
+    if (event.target.tagName.toLowerCase() === 'td') {
+        playerIdentifier = 3;
+        inputPlayerData(event.target, playerIdentifier);
+        //console.log(players);
+        updatePlayerRow();
+    }
+});
+document.getElementById('player-4').addEventListener('input', (event) => {
+    if (event.target.tagName.toLowerCase() === 'td') {
+        playerIdentifier = 4;
         inputPlayerData(event.target, playerIdentifier);
         console.log(players);
         updatePlayerRow();
     }
 });
-
 //functions
 async function getAvailableCourses() {
     return fetch('https://golf-courses-api.herokuapp.com/courses/')
@@ -93,7 +134,6 @@ function renderCourse() {
         }
     });
 }
-
 function teeBoxSelect(currentCourseId) {
     let teeBoxSelectHtml = '';
     courseId = currentCourseId;
@@ -103,12 +143,6 @@ function teeBoxSelect(currentCourseId) {
         ${teeBox.yards} yards</option>`
     });
     document.getElementById('tee-box-select').innerHTML = teeBoxSelectHtml;
-}
-function fillOutScorecard(rowId) {
-    //define variables
-    teeBoxes[courseId].forEach((hole) => {
-    
-    });
 }
 function displayOrHide(element) {
     //console.log(element);
@@ -172,7 +206,6 @@ function renderHandicap(courseId, tableRowElement, teeBoxIndex, rowTitle) {
     let tableRowHtml = '';
     let total = 0;
     let firstHalf = 0;
-    //const teeBoxi = -1;
     
     tableRowHtml += '<td>' + rowTitle + '</td>';
     //for loop to get yardage from each hole
@@ -204,11 +237,11 @@ function printPlayerRows(playerId) {
             tableRowHtml += `<td id="${i}" contenteditable="true"></td>`;
         } else if (i === 9) {
             tableRowHtml += `<td id="${i}" contenteditable="true"></td>
-            \n<td id="out-1"></td>`;
+            \n<td id="${'out-' + (playerId * 2)}"></td>`;
         }
     }
-    tableRowHtml += `<td id="in"></td>\n<td id="out-2"></td>
-    \n<td id="total"></td>`;
+    tableRowHtml += `<td id="${'in-' + (playerId + 1)}"></td>\n<td id="${'out-' + ((playerId * 2) + 1)}"></td>
+    \n<td id="${'total-' + (playerId + 1)}"></td>`;
     let idString = 'player-' + (playerId + 1);
     document.getElementById(idString).innerHTML = tableRowHtml;
 }
@@ -216,25 +249,51 @@ function createPlayer(playerName) {
     players.push(getPlayer(playerName));
     // console.log(players);
 }
-function updatePlayerRow() {
-    //total up 1-9 score when first 9 hole scores are entered
-    //total up 10-18 in the same way
-    let counter = 0;
-    let total = 0;
-    let playersPoints = players[playerIdentifier - 1];
-    for (let i = 0; i < 9; i++) {
-        if (playersPoints.scores[i] !== undefined || playersPoints !== NaN) {
-            total += playersPoints.scores[i];
-            counter++;
-        }
-    }
-    if (counter === 9) {
-        document.getElementById('out-1').innerHTML = total;
-    } else {
-        document.getElementById('out-1').innerHTML = '';
-    }
-}
 function inputPlayerData(targetBox, currentRowId) {
     //push currentBox's value to player scores array
     players[currentRowId - 1].scores[parseInt(targetBox.id) - 1] = parseInt(targetBox.textContent);
+}
+function updatePlayerRow() {
+    //total up 1-9 score when first 9 hole scores are entered
+    //total up 10-18 in the same way
+    let counter1 = 0;
+    let counter2 = 0;
+    let total1 = 0;
+    let total2 = 0;
+    let playersPoints = players[playerIdentifier - 1];
+    let playerName = playersPoints.name;
+    for (let i = 0; i < 9; i++) {
+        //keep in mind after you change an editablecontent box
+        //(from having a number to no number) it is replaced in the array with NaN
+        if (playersPoints.scores[i] > 0) { //|| playersPoints !== NaN) {
+            total1 += playersPoints.scores[i];
+            counter1++;
+        }
+    }
+    if (counter1 === 9) {
+        document.getElementById('out-' +  ((playerIdentifier * 2) - 2)).innerHTML = total1;
+    } else {
+        document.getElementById('out-' + ((playerIdentifier * 2) - 2)).innerHTML = '';
+    }
+    for (let j = 9; j < 18; j++) {
+        if (playersPoints.scores[j] > 0) {
+            total2 += playersPoints.scores[j];
+            counter2++;
+        }
+    }
+    if (counter2 === 9) {
+        document.getElementById('out-' + ((playerIdentifier * 2) - 1)).innerHTML = total2;
+        if (counter1 === 9) {
+            document.getElementById('total-' + playerIdentifier).innerHTML = total1 + total2;
+            document.getElementById('in-' + playerIdentifier).innerHTML = total1;
+        }
+    } else {
+        document.getElementById('out-' + ((playerIdentifier * 2) - 1)).innerHTML = '';
+    }
+    //toastr completion
+    let isFinished = playersPoints.scores.filter(num => num > 0);
+    if (isFinished.length === 18) {
+        let successMessage = `Congratulations ${playerName}! You completed the ${courseName} golf course!`
+        toastr.success(successMessage, "Success!");
+    }
 }

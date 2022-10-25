@@ -19,4 +19,14 @@ body, .outerFlex, navbar {
   visibility: visible;
 }
 
+#course-heading {
+  visibility: hidden;
+  text-align: center;
+}
+
+#tee-box-heading {
+  visibility: hidden;
+  text-align: center;
+}
+
 /*# sourceMappingURL=style.css.map */
