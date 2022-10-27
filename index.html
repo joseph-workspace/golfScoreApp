@@ -17,43 +17,51 @@
   </head>
   
   <body>
-
-    <div class="container-fluid d-flex flex-column m-0 p-0 outerFlex">
+    <div class="container-fluid p-0 m-0">
       <div class="row w-100 m-0">
         <nav class="navbar w-100 bg-info ps-3">
-          <i class="col-10 fa-regular fa-calendar-days p"></i>
-          <i class="col-2 fa-solid fa-bars"></i>
+          <i class="col-11 fa-regular fa-calendar-days p">
+            <span class="app-name">The Golfomatic 3000</span>
+          </i>
+          <i class="col-1 text-center fa-solid fa-bars menu-icon-1"></i>
         </nav>
       </div>
+    </div>
 
-
+    <div class="container-fluid d-flex flex-column m-0 p-0 outerFlex">
       <div class="row">
-        <h1>Let's play some golf!</h1>
-        <div class="col-lg-12" id="header"></div>
+        <h1 class="text-center text-dark">Let's play some golf!</h1>
+        <div class="col-md-12" id="header"></div>
       </div>
-
       <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-4 option-1">
           <div id="options-container"></div>
           <!-- dynamic option tags will be added after api request is returned -->
           <div class="form-group-1">
-          <label for="course-select">Select Course</label>
-          <select class="form-control" id="course-select"></select>
+            <label for="course-select">Select Course</label>
+            <select class="form-control" id="course-select"></select>
+          </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 option-2">
           <div class="form-group-2">
             <label for="tee-box-select">Select Tee Box</label>
             <select class="form-control" id="tee-box-select"></select>
           </div>
         </div>
-        </div>
+        <div class="col-lg-2"></div>
       </div>
-      <h2 id="course-heading"></h2>
-      <h2 id="tee-box-heading"></h2>
-      <div class="row" id="scorecard-container">
-        <div class=".col-lg-12" id="scorecard">
+      <div class="row m-0">
+        <div class="col-lg-2"></div>
+          <h2 class="col-lg-4 text-white bg-success p-0" id="course-heading"></h2>
+          <h2 class="col-lg-4 text-white teeBox bg-success" id="tee-box-heading"></h2>
+        <div class="col-lg-2"></div>
+      </div>
+      <div class="row m-0" id="scorecard-container">
+        <div class="empty-cont1"></div>
+        <div class="col-md-11" id="scorecard">
           <div class="table-responsive">
-            <table class="table table-bordered score-card-front9">
+            <table class="table table-bordered score-card-front9 m-0 table-layout">
               <tr class="holes">
                 <th style="text-align:left;">Hole</th>
                 <th>1</th>
@@ -88,18 +96,24 @@
               <tr id="player-3"></tr>
               <tr id="player-4"></tr>
             </table>
-            <button type="button" class="btn btn-success addBtn">Add new Player</button>
           </div>
         </div>
+        <div class="empty-con2"></div>
       </div>
-      <div class="container-fluid d-flex flex-column m-0 p-0">
-        <div class="row w-100 m-0">
-          <nav class="navbar w-100 bg-info ps-3">
-            <!-- <i class="col-10 fa-regular fa-calendar-days p"></i>
-            <i class="col-2 fa-solid fa-bars"></i> -->
-          </nav>
+      <div class="row pt-2 ps-1 mb-1 button-row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-success addBtn">Add new Player</button>
         </div>
+      </div>
     </div>
-    
+    <div class="container-fluid d-flex flex-column m-0 p-0">
+      <!-- <div class="row w-100 m-0"> -->
+        <nav class="row navbar w-100 m-0 bg-info ps-3">
+          <i class="col-12 text-center">&copy; 2022 Joseph Burton</i>
+          <!-- <i class="col-10 fa-regular fa-calendar-days p"></i>
+          <i class="col-2 fa-solid fa-bars"></i> -->
+        </nav>
+      <!-- </div> -->
+    </div>
   </body>
 </html>

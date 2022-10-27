@@ -6,6 +6,8 @@ var players = [];
 var courseName;
 var courseId;
 var playerIdentifier = 1;
+let popUpCounter = 0;
+let playerName = '';
 const selectElement = document.getElementById('course-select');
 const teeBoxElement = document.getElementById('tee-box-select');
 const addPlayerBtn = document.querySelector('.addBtn');
@@ -37,7 +39,7 @@ selectElement.addEventListener('change', function(event) {
         courses[0].forEach((course) => {
             if (course.id == event.target.value) {
                 courseName = course.name;
-                tableCourseHeading.textContent = `Your course: ${courseName}`;
+                tableCourseHeading.innerHTML = `<i class="fa-solid fa-tree text-dark tree"></i>Course: ${courseName}`;
             }
         });
 
@@ -52,16 +54,16 @@ teeBoxElement.addEventListener('change', function(event) {
     const yardageRow = document.querySelector('#Yardage');
     const parRow = document.querySelector('#Par');
     const handicapRow = document.querySelector('#Handicap');
-    console.log(teeBoxes);
-    console.log('This is where you want to print headers', event.target.value);
     //get teeBox type here
     let currentTeeBox = teeBoxes[courseId][0].teeBoxes[event.target.value].teeType.toUpperCase();
-    tableTeeBox.textContent = `Tee Box: ${currentTeeBox}`;
+    tableTeeBox.innerHTML = `<i class="fa-solid fa-golf-ball-tee golf-ball"></i>
+    Tee Box: ${currentTeeBox}`;
     displayOrHide(table1Element);
     displayOrHide(courseSelect);
     displayOrHide(teeSelect);
     displayOrHide(tableCourseHeading);
     displayOrHide(tableTeeBox);
+    displayOrHide(addPlayerBtn);
     renderYardage(courseId, yardageRow, event.target.value, 'Yardage');
     renderPar(courseId, parRow, event.target.value, 'Par');
     renderHandicap(courseId, handicapRow, event.target.value, 'Handicap');
@@ -72,12 +74,16 @@ addPlayerBtn.addEventListener('click', () => {
     //create player object and store in players array
     //print row with player name
     if (players.length < 4) {
-        const playerName = prompt('Please enter your player name:');
-        createPlayer(playerName);
-        console.log(players);
-        printPlayerRows(players.length - 1);
+        playerName = prompt('Please enter your player name:');
+        if (playerName === '') {
+            toastr.warning(`You must enter a valid player name!
+             Please try again.`, 'Warning');
+        } else {
+            createPlayer(playerName);
+            printPlayerRows(players.length - 1); 
+        }
     } else {
-        toastr.warning('You can\'t add more than 4 players!', 'Error!');
+        toastr.error('You can\'t add more than 4 players!', 'Error!');
     }
 });
 
@@ -272,6 +278,11 @@ function updatePlayerRow() {
     }
     if (counter1 === 9) {
         document.getElementById('out-' +  ((playerIdentifier * 2) - 2)).innerHTML = total1;
+        if (popUpCounter === 0) {
+            toastr.success(`Good job ${playerName} you're halfway done!`);
+            popUpCounter++;
+        }
+
     } else {
         document.getElementById('out-' + ((playerIdentifier * 2) - 2)).innerHTML = '';
     }

@@ -1,16 +1,26 @@
 $color: green;
 $full-width: 100%;
 $full-height: 100vh;
-
-body, .outerFlex, navbar {
+body {
     width: $full-width;
     height: $full-height;
 }
+.outerFlex {
+    width: $full-width;
+    height: 90vh;
+    background-image: url('../images/golfCourse');
+    background-size: cover;
+    z-index: 0;
+}
 .navbar {
-    height: 50px;
+    height: 5vh;
 }
 #scorecard-container, .score-card-back9 {
     visibility: hidden;
+    z-index: 1;
+}
+.table-layout {
+    background-color: lightblue;
 }
 .holes {
     text-align: center;
@@ -18,11 +28,44 @@ body, .outerFlex, navbar {
 .form-group-1, .form-group-2 {
     visibility: visible;
 }
-#course-heading {
+#course-heading, #tee-box-heading, .button-row {
     visibility: hidden;
     text-align: center;
 }
-#tee-box-heading {
-    visibility: hidden;
-    text-align: center;
+.option-2 {
+    display: inline-block;
 }
+.empty-cont1 {
+    width: 4%;
+}
+.app-name {
+    color: white;
+    position: relative;
+    left: 10px;
+}
+.tree {
+    position: relative;
+    left: -8px;
+}
+.golf-ball {
+    position: relative;
+    left: -8px;
+}
+// .menu-icons {
+//     position: relative;
+//     left: 65%;
+// }
+// .menu-icon-1 {
+//     display: inline-block;
+//     text-align: right;
+//     // position: relative;
+//     // right: 0%;
+//     // top: -4px;
+// }
+// .menu-icon-2 {
+//     display: inline-block;
+//     text-align: right;
+//     // position: relative;
+//     // left: 2%;
+//     // top: -4px;
+// }
